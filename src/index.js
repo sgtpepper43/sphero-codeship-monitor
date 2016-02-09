@@ -16,8 +16,9 @@ let status = 'stopped';
 try {
   orb.connect(() => {
     console.log('connected!');
-    orb.setPermOptionFlags(0x110011);
+    orb.setPermOptionFlags(0x000011);
     connected = true;
+    spin(orb);
     orb.color(statuses[status]);
   });
 } catch (e) {
@@ -26,15 +27,16 @@ try {
 setInterval(() => {
   if (!connected) return;
   request.get(`https://codeship.com/api/v1/projects.json?api_key=${config.CODESHIP_KEY}`).end((err, res) => {
-    const newStatus = _(res.body.projects)
-      .map('builds')
-      .flatten()
-      .filter({ ['github_username']: 'sgtpepper43' })
-      .sortBy('started_at')
-      .last()
-      .status;
-    console.log(`Codeship status received: ${newStatus}`);
+    if (err) return;
     try {
+      const newStatus = _(res.body.projects)
+        .map('builds')
+        .flatten()
+        .filter({ ['github_username']: 'sgtpepper43' })
+        .sortBy('started_at')
+        .last()
+        .status;
+      console.log(`Codeship status received: ${newStatus}`);
       if (newStatus !== status) spin(orb);
       status = newStatus;
       orb.color(statuses[status]);
@@ -47,8 +49,8 @@ setInterval(() => {
 function spin(sph) {
   sph.setRawMotors({
     lmode: 0x01,
-    lpower: 255,
+    lpower: 90,
     rmode: 0x02,
-    rpower: 255
+    rpower: 90
   });
 }
