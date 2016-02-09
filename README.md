@@ -1,7 +1,7 @@
 # Sphero Codeship Monitor
 
 ## Setup
-Create .env file with your `CODESHIP_KEY` and `SPHERO_PORT`. The `SPHERO_PORT` can be found like so (on OSX), once you've paired it via bluetooth:  
+Create .env file with your `GITHUB_USERNAME`, `CODESHIP_KEY`, and `SPHERO_PORT`. The `SPHERO_PORT` can be found like so (on OSX), once you've paired it via bluetooth:  
 ```bash
 ls -a /dev | grep tty.Sphero
 ```

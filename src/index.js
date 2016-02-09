@@ -32,7 +32,7 @@ setInterval(() => {
       const newStatus = _(res.body.projects)
         .map('builds')
         .flatten()
-        .filter({ ['github_username']: 'sgtpepper43' })
+        .filter({ ['github_username']: config.GITHUB_USERNAME })
         .sortBy('started_at')
         .last()
         .status;
