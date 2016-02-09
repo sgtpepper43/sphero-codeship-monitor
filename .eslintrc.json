@@ -1,0 +1,24 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb/base",
+  "globals": {
+    "angular": false,
+    "$": true,
+    "_": false,
+    "IS_TEST": false,
+    "Intercom": false
+  },
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    "comma-dangle": 0,
+    "object-shorthand": 2,
+    "prefer-spread": 2,
+    "camelcase": [2, {"properties": "always"}],
+    "dot-notation": [2, {"allowPattern": "^[a-z]+(_[a-z]+)+$"}],
+    "no-param-reassign": 0,
+    "no-use-before-define": [2, "nofunc"],
+    "eqeqeq": [2, "allow-null"]
+  }
+}

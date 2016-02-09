@@ -1,0 +1,32 @@
+{
+  "name": "codeship-terminal-monitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "prebuild": "rm -rf build && mkdir build",
+    "build": "babel src -d build",
+    "start": "node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Trevor Fenn",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.5.1",
+    "colors": "^1.1.2",
+    "dotenv": "^2.0.0",
+    "lodash": "^4.0.1",
+    "serialport": "^2.0.6",
+    "sphero": "^0.8.1",
+    "superagent": "^1.7.2"
+  },
+  "devDependencies": {
+    "babel": "^6.5.1",
+    "babel-cli": "^6.4.5",
+    "babel-eslint": "^4.1.6",
+    "babel-preset-es2015-node5": "^1.1.2",
+    "babel-preset-stage-0": "^6.3.13",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^4.0.0"
+  }
+}
