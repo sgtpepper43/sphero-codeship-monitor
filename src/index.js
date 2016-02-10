@@ -46,7 +46,6 @@ try {
 
     function update() {
       updating = true;
-      console.log('Shake value: ', max);
       if (max > 500) {
         request.post(`https://codeship.com/api/v1/builds/${lastBuild.id}/restart.json?api_key=${config.CODESHIP_KEY}`).end();
         console.log(`Restarting build ${lastBuild.id}`);
