@@ -27,21 +27,22 @@ try {
 setInterval(() => {
   if (!connected) return;
   request.get(`https://codeship.com/api/v1/projects.json?api_key=${config.CODESHIP_KEY}`).end((err, res) => {
+    console.log(err);
     if (err) return;
     try {
-      const newStatus = _(res.body.projects)
+      const newStatus = _.get(_(res.body.projects)
         .map('builds')
         .flatten()
         .filter({ ['github_username']: config.GITHUB_USERNAME })
         .sortBy('started_at')
-        .last()
-        .status;
+        .last(), 'status');
+      if (!newStatus) throw 'No status';
       console.log(`Codeship status received: ${newStatus}`);
       if (newStatus !== status) spin(orb);
       status = newStatus;
       orb.color(statuses[status]);
     } catch (e) {
-      // do nothing
+      console.log(e);
     }
   });
 }, 10000);
@@ -52,5 +53,9 @@ function spin(sph) {
     lpower: 90,
     rmode: 0x02,
     rpower: 90
+  }, () => {
+    setTimeout(() => {
+      sph.setStabilization(1);
+    }, 2000);
   });
 }
