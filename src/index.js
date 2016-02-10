@@ -13,6 +13,7 @@ const statuses = {
 const orb = sphero(config.SPHERO_PORT);
 let connected = false;
 let status = 'stopped';
+let lastBuild = {};
 try {
   orb.connect(() => {
     console.log('connected!');
@@ -20,6 +21,42 @@ try {
     connected = true;
     spin(orb);
     orb.color(statuses[status]);
+    let max = 0;
+    let updating = false;
+
+    // enable streaming of velocity data
+    orb.setDataStreaming({
+      mask1: 0x00000000,
+      mask2: 0x01800000,
+      n: 40,
+      m: 1,
+      pcnt: 0
+    });
+
+    orb.on('dataStreaming', data => {
+      if (updating) { return; }
+
+      const x = Math.abs(data.xVelocity.value);
+      const y = Math.abs(data.yVelocity.value);
+
+      const localmax = Math.max(x, y);
+
+      if (localmax > max) { max = localmax; }
+    });
+
+    function update() {
+      updating = true;
+      console.log('Shake value: ', max);
+      if (max > 500) {
+        request.post(`https://codeship.com/api/v1/builds/${lastBuild.id}/restart.json?api_key=${config.CODESHIP_KEY}`).end();
+        console.log(`Restarting build ${lastBuild.id}`);
+      }
+
+      max = 0;
+      updating = false;
+    }
+
+    setInterval(update, 5000);
   });
 } catch (e) {
   console.log(e);
@@ -30,16 +67,16 @@ setInterval(() => {
     console.log(err);
     if (err) return;
     try {
-      const newStatus = _.get(_(res.body.projects)
+      lastBuild = _(res.body.projects)
         .map('builds')
         .flatten()
         .filter({ ['github_username']: config.GITHUB_USERNAME })
         .sortBy('started_at')
-        .last(), 'status');
-      if (!newStatus) throw 'No status';
-      console.log(`Codeship status received: ${newStatus}`);
-      if (newStatus !== status) spin(orb);
-      status = newStatus;
+        .last();
+      if (!lastBuild) throw 'No build!';
+      console.log(`Codeship status received: ${lastBuild.status}`);
+      if (lastBuild.status !== status) spin(orb);
+      status = lastBuild.status;
       orb.color(statuses[status]);
     } catch (e) {
       console.log(e);
