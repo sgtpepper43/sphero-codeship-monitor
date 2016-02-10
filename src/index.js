@@ -49,13 +49,38 @@ try {
       if (max > 500) {
         request.post(`https://codeship.com/api/v1/builds/${lastBuild.id}/restart.json?api_key=${config.CODESHIP_KEY}`).end();
         console.log(`Restarting build ${lastBuild.id}`);
+        orb.color('black');
+        setTimeout(() => {
+          orb.color('white');
+          setTimeout(() => {
+            orb.color('black');
+            setTimeout(() => {
+              orb.color('white');
+              setTimeout(() => {
+                orb.color('black');
+                setTimeout(() => {
+                  orb.color('white');
+                  setTimeout(() => {
+                    orb.color('black');
+                    setTimeout(() => {
+                      orb.color('white');
+                      setTimeout(() => {
+                        orb.color('black');
+                      }, 200);
+                    }, 200);
+                  }, 200);
+                }, 200);
+              }, 200);
+            }, 200);
+          }, 200);
+        }, 200);
       }
 
       max = 0;
       updating = false;
     }
 
-    setInterval(update, 5000);
+    setInterval(update, 600);
   });
 } catch (e) {
   console.log(e);
